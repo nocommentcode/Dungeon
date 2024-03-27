@@ -31,4 +31,5 @@ public class Theif : ADungeonAgent
     private MoveToTreasureBeahviourFactory MakeMoveToTreasureBehaviour(){
         return new MoveToTreasureBeahviourFactory(dungeonGrid, transform);
     }
+
 }

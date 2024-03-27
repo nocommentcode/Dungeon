@@ -21,7 +21,7 @@ public class DungeonGenerator : MonoBehaviour {
     public int randomSeed = 10;
     
     [Range(0, 1)]
-    public float initialWallDensity = 0.5f;
+    public float initialDungeonDensity = 0.5f;
 
     [Range(1, 50)]
     public int iterations = 5;
@@ -68,6 +68,11 @@ public class DungeonGenerator : MonoBehaviour {
         if(dungeonGrid.Theif == null){
             EndGame();
         }
+
+        // end game if all the treasure has been collected
+        if(dungeonGrid.TreasureTiles.Count == 0){
+            EndGame();
+        }
     } 
 
     /// <summary>
@@ -86,7 +91,7 @@ public class DungeonGenerator : MonoBehaviour {
         var dungeonGrid = new DungeonGrid(width, height, random, tilemap);
         
         // PCG step 1: randomise tiles
-        dungeonGrid.Randomise(initialWallDensity);
+        dungeonGrid.Randomise(initialDungeonDensity);
         
         // PCG step 2: cellular automata
         for (int i =0; i<iterations; i++){

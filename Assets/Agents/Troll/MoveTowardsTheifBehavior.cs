@@ -27,6 +27,6 @@ public class MoveTowardsTheifBehavior : AMoveBehaviourFactory
     {
         // use a star to move towards theif
         var theifTile = _dungeonGrid.FirstOrDefault(tile => tile.GetGlobalPosition() == _dungeonGrid.Theif.transform.position);
-        return AStarSearch(theifTile);
+        return AStarSearch.NextTile(GetCurrentTile(), theifTile);
     }
 }

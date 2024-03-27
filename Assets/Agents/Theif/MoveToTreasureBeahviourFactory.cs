@@ -4,6 +4,7 @@ using System.Linq;
 /// <summary>
 /// Move to Treasuer behavior factory
 /// Moves the theif towards the treasure if there is still treasure in the dungeon
+/// Movement is determined by a context map taking into account distance from closest treasure and troll locations
 /// </summary> 
 public class MoveToTreasureBeahviourFactory : AMoveBehaviourFactory
 {
@@ -20,23 +21,24 @@ public class MoveToTreasureBeahviourFactory : AMoveBehaviourFactory
     }
 
     /// <summary>
-    /// Finds the closes treasure tile
+    /// Finds the closest treasure tile
     /// </summary>
     /// <returns>Closest treasure</returns>
     private DungeonTile FindClosestTreasure()
-    {
-        var currentTile = GetCurrentTile();
-
+    {        
         return _dungeonGrid.TreasureTiles
-                            .OrderBy(treasure => Vector3.Distance(treasure.Key.GetTilemapPosition(), currentTile.GetTilemapPosition()))
+                            .OrderBy(treasure => Vector3.Distance(treasure.Value.transform.position, _transform.position))
                             .FirstOrDefault()
                             .Key;
     }
 
     protected override DungeonTile GetDestTile()
     {
-        // use a star to find tile to move to to get to closest treasure
         var closestTreasure = FindClosestTreasure();
-        return AStarSearch(closestTreasure);
+        var trollLocations = _dungeonGrid.Trolls.Select(troll => troll.transform.position).ToList();
+
+        // use context map to decide which tile to move to
+        var contextMap = new TreasurePathContextMap(GetCurrentTile(), closestTreasure, trollLocations);
+        return contextMap.GetBestTile();
     }
 }

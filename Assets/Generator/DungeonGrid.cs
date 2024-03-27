@@ -45,6 +45,9 @@ public class DungeonGrid {
         _flatTiles = BuildTiles(width, height);        
     }
 
+    
+    # region procedular-generation
+
     /// <summary>
     /// Initialises the Dungeon with random walls and dungeon tiles
     /// </summary>
@@ -55,15 +58,6 @@ public class DungeonGrid {
                 tile.IsDungeon = true;
             }
         });
-    }
-
-    /// <summary>
-    /// Returns first tile matching criteria or null
-    /// </summary>
-    /// <param name="selector">Criteria to select tile on</param>
-    /// <returns>Tile or null</returns>
-    public DungeonTile FirstOrDefault(Func<DungeonTile, bool> selector){
-        return _flatTiles.FirstOrDefault(selector);
     }
 
     /// <summary>
@@ -93,33 +87,13 @@ public class DungeonGrid {
                     .ToList()
                     .ForEach((result) => result.tile.IsDungeon = result.filled);
     }
-
+    
+    
     /// <summary>
-    /// Renders the Dungeon using tilemap
+    /// Post processes the dungeon by linking seaparated clusters
     /// </summary>
-    /// <param name="floorTile">The tile to use for the floor</param>
-    /// <param name="wallTile">The tile to use for the walls</param>
-    public void Render(Tile floorTile, Tile wallTile){
-        ClearAllTiles();
-        _flatTiles.ForEach(tile => _tilemap.SetTile(tile.GetTilemapPosition(), tile.IsDungeon ? floorTile : wallTile));
-    }
-
-    /// <summary>
-    /// Clears all tile from tilemap
-    /// </summary>
-    public void ClearAllTiles(){
-        _tilemap.ClearAllTiles();
-    }
-
-    /// <summary>
-    /// Returns a random Tile matching a selector
-    /// </summary>
-    /// <param name="selector">The selector</param>
-    /// <returns>A random tile</returns>
-    public DungeonTile SelectRandomTile(Func<DungeonTile, bool> selector){
-        var candidateTiles = _flatTiles.Where(selector).ToList();
-        var index = _random.Next(0, candidateTiles.Count);
-        return candidateTiles[index];
+    public void PostProcess(){
+        LinkUnreachableTiles();
     }
 
     /// <summary>
@@ -154,12 +128,6 @@ public class DungeonGrid {
         return flatTiles;
     }
 
-    /// <summary>
-    /// Post processes the dungeon by linking seaparated clusters
-    /// </summary>
-    public void PostProcess(){
-        LinkUnreachableTiles();
-    }
 
 
     /// <summary>
@@ -229,11 +197,11 @@ public class DungeonGrid {
 
         // connect clusters in x axis
         int deltaX = closestTiles.Item1.X - closestTiles.Item2.X;
-        DungeonTile neighbour = ConnectTiles(Math.Abs(deltaX), deltaX > 0 ? Direction.LEFT : Direction.RIGHT, closestTiles.Item2);
+        DungeonTile neighbour = ConnectTiles(Math.Abs(deltaX), deltaX > 0 ? Direction.RIGHT : Direction.LEFT, closestTiles.Item2);
         
         // connect custers in y axis
         int deltaY = closestTiles.Item1.Y - closestTiles.Item2.Y;
-        ConnectTiles(Math.Abs(deltaY), deltaY > 0 ? Direction.DOWN: Direction.UP, neighbour);
+        ConnectTiles(Math.Abs(deltaY), deltaY > 0 ? Direction.UP: Direction.DOWN, neighbour);
     }
 
     /// <summary>
@@ -260,4 +228,45 @@ public class DungeonGrid {
 
         return visited;
     }
+    
+    #endregion
+
+
+    # region tile-access
+    /// <summary>
+    /// Returns first tile matching criteria or null
+    /// </summary>
+    /// <param name="selector">Criteria to select tile on</param>
+    /// <returns>Tile or null</returns>
+    public DungeonTile FirstOrDefault(Func<DungeonTile, bool> selector){
+        return _flatTiles.FirstOrDefault(selector);
+    }
+
+    /// <summary>
+    /// Returns a random Tile matching a selector
+    /// </summary>
+    /// <param name="selector">The selector</param>
+    /// <returns>A random tile</returns>
+    public DungeonTile SelectRandomTile(Func<DungeonTile, bool> selector){
+        var candidateTiles = _flatTiles.Where(selector).ToList();
+        var index = _random.Next(0, candidateTiles.Count);
+        return candidateTiles[index];
+    }
+    
+    #endregion
+
+    /// <summary>
+    /// Renders the Dungeon using tilemap
+    /// </summary>
+    /// <param name="floorTile">The tile to use for the floor</param>
+    /// <param name="wallTile">The tile to use for the walls</param>
+    public void Render(Tile floorTile, Tile wallTile){
+        _tilemap.ClearAllTiles();
+        _flatTiles.ForEach(tile => _tilemap.SetTile(tile.GetTilemapPosition(), tile.IsDungeon ? floorTile : wallTile));
+    }
+
+   
+    
+
+    
 }

@@ -260,11 +260,11 @@ MonoBehaviour:
   wallTile: {fileID: 11400000, guid: 9002cd17b1777a34db4f61e323cf3c41, type: 2}
   width: 100
   height: 70
-  randomSeed: 779
-  initialWallDensity: 0.5
+  randomSeed: 6404
+  initialDungeonDensity: 0.5
   iterations: 5
-  treasureCount: 10
-  trollCount: 10
+  treasureCount: 15
+  trollCount: 6
   treasure: {fileID: 1563514208492538, guid: 64d6bba3e8fd85c4ab17f54507fd0a40, type: 3}
   theif: {fileID: 6921565436380587909, guid: 31180abbc05d70643a142987ed315c66, type: 3}
   troll: {fileID: 7625177621349508034, guid: 2aa2d55a5eabc904c8d9cae9d3f600ff, type: 3}
@@ -398,7 +398,7 @@ Camera:
   far clip plane: 1000
   field of view: 60
   orthographic: 1
-  orthographic size: 1100
+  orthographic size: 800
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2

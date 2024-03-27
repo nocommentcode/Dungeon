@@ -87,11 +87,11 @@ public class DungeonTile{
         // find neihbour's direction
         Direction? direction = null;
         if (xOffset == 0){
-            direction = yOffset > 0 ? Direction.UP : Direction.DOWN;
+            direction = yOffset > 0 ? Direction.DOWN : Direction.UP;
         }
 
         if(yOffset == 0){
-            direction = xOffset > 0 ? Direction.RIGHT : Direction.LEFT;
+            direction = xOffset > 0 ? Direction.LEFT : Direction.RIGHT;
         }
         if(!direction.HasValue){
             return;

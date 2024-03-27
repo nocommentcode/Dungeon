@@ -33,6 +33,6 @@ public class MoveToAssignedTreasureBehaviour : AMoveBehaviourFactory
     protected override DungeonTile GetDestTile()
     {
         // use a star to move towards assigned treasure
-        return AStarSearch(_troll.assignedTreasure);
+        return AStarSearch.NextTile(GetCurrentTile(), _troll.assignedTreasure);
     }
 }
